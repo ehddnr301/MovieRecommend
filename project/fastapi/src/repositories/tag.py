@@ -3,17 +3,17 @@ from typing import Callable
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.domain import MovieDomain
+from src.domain import TagDomain
 
 
-class MovieRepository:
+class TagRepository:
     def __init__(
         self, session_factory: Callable[..., AbstractAsyncContextManager[AsyncSession]]
     ) -> None:
         self.session_factory = session_factory
 
-    async def create(self, movie: MovieDomain) -> MovieDomain:
+    async def create(self, tag: TagDomain) -> TagDomain:
         async with self.session_factory() as session:
-            session.add(movie)
+            session.add(tag)
             await session.commit()
-        return movie
+        return tag

@@ -1,16 +1,16 @@
 from dependency_injector import containers, providers
 
 from src.core import Database, Config
-from src.repositories import MovieRepository
-from src.services import MovieService
+from src.repositories import MovieRepository, RatingRepository, TagRepository
+from src.services import MovieService, RatingService, TagService
 
 
 class Container(containers.DeclarativeContainer):
-    wiring_config = containers.WiringConfiguration(modules=[".api.movie.movie"])
+    wiring_config = containers.WiringConfiguration(
+        modules=[".api.movie.movie", ".api.rating.rating", ".api.tag.tag"]
+    )
 
     db = providers.Singleton(Database, db_url=Config.DB_URL)
-
-    print(db.provided.session)
 
     movie_repository = providers.Factory(
         MovieRepository,
@@ -20,4 +20,24 @@ class Container(containers.DeclarativeContainer):
     movie_service = providers.Factory(
         MovieService,
         movie_repository=movie_repository,
+    )
+
+    rating_repository = providers.Factory(
+        RatingRepository,
+        session_factory=db.provided.session,
+    )
+
+    rating_service = providers.Factory(
+        RatingService,
+        rating_repository=rating_repository,
+    )
+
+    tag_repository = providers.Factory(
+        TagRepository,
+        session_factory=db.provided.session,
+    )
+
+    tag_service = providers.Factory(
+        TagService,
+        tag_repository=tag_repository,
     )
