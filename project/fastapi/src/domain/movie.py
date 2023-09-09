@@ -17,3 +17,7 @@ class MovieDomain(TimestampMixin, Base):
             title=title,
             genres=genres,
         )
+
+    @classmethod
+    def get_all_movies_id(cls):
+        return cls.query.with_entities(cls.movie_id).all()

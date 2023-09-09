@@ -16,3 +16,11 @@ async def create_movie(
     movie_service: MovieService = Depends(Provide[Container.movie_service]),
 ):
     return await movie_service.create_movie(**request.model_dump())
+
+
+@movie_router.get("/all")
+@inject
+async def get_all_movies_id(
+    movie_service: MovieService = Depends(Provide[Container.movie_service]),
+):
+    return await movie_service.get_all_movies_id()

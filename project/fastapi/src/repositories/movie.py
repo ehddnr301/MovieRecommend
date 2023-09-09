@@ -2,6 +2,7 @@ from contextlib import AbstractAsyncContextManager
 from typing import Callable
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
 from src.domain import MovieDomain
 
@@ -17,3 +18,15 @@ class MovieRepository:
             session.add(movie)
             await session.commit()
         return movie
+
+    async def get_all_movies_id(self):
+        async with self.session_factory() as session:
+            return (
+                (
+                    await session.execute(
+                        select(MovieDomain.movie_id).order_by(MovieDomain.movie_id)
+                    )
+                )
+                .scalars()
+                .all()
+            )

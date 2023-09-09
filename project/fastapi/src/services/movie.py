@@ -11,3 +11,6 @@ class MovieService:
     ) -> MovieDomain:
         movie = MovieDomain.create(movie_id=movie_id, title=title, genres=genres)
         return await self._repository.create(movie=movie)
+
+    async def get_all_movies_id(self):
+        return await self._repository.get_all_movies_id()
