@@ -9,11 +9,3 @@ class RatingDomain(TimestampMixin, Base):
     user_id = Column(Integer, primary_key=True)
     movie_id = Column(Integer, primary_key=True)
     rating = Column(Float)
-
-    @classmethod
-    def create(cls, user_id: int, movie_id: int, rating: float) -> "RatingDomain":
-        return cls(
-            user_id=user_id,
-            movie_id=movie_id,
-            rating=rating,
-        )

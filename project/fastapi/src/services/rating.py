@@ -9,5 +9,5 @@ class RatingService:
     async def create_rating(
         self, user_id: int, movie_id: int, rating: float
     ) -> RatingDomain:
-        rating = RatingDomain.create(user_id=user_id, movie_id=movie_id, rating=rating)
+        rating = RatingDomain(user_id=user_id, movie_id=movie_id, rating=rating)
         return await self._repository.create(rating=rating)
