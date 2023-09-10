@@ -18,6 +18,14 @@ async def create_movie(
     return await movie_service.create_movie(**request.model_dump())
 
 
+@movie_router.get("/last")
+@inject
+async def get_last_movie_id(
+    movie_service: MovieService = Depends(Provide[Container.movie_service]),
+):
+    return await movie_service.get_last_movie_id()
+
+
 @movie_router.get("/all")
 @inject
 async def get_all_movies_id(

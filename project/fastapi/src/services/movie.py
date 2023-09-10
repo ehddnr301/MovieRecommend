@@ -9,8 +9,11 @@ class MovieService:
     async def create_movie(
         self, movie_id: int, title: str, genres: list[str]
     ) -> MovieDomain:
-        movie = MovieDomain.create(movie_id=movie_id, title=title, genres=genres)
+        movie = MovieDomain(movie_id=movie_id, title=title, genres=genres)
         return await self._repository.create(movie=movie)
 
     async def get_all_movies_id(self):
         return await self._repository.get_all_movies_id()
+
+    async def get_last_movie_id(self):
+        return await self._repository.get_last_movie_id()

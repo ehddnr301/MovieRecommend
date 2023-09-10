@@ -30,3 +30,17 @@ class MovieRepository:
                 .scalars()
                 .all()
             )
+
+    async def get_last_movie_id(self):
+        async with self.session_factory() as session:
+            return (
+                (
+                    await session.execute(
+                        select(MovieDomain.movie_id)
+                        .order_by(MovieDomain.created_at.desc())
+                        .limit(1)
+                    )
+                )
+                .scalars()
+                .first()
+            )
