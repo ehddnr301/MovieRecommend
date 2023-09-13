@@ -1,0 +1,14 @@
+{
+    "name": "postgres-sink-connector",
+    "config": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "connection.url": "jdbc:postgresql://postgres-service-target:5432/postgres",
+        "connection.user": "postgres",
+        "connection.password": "postgres",
+        "table.name.format": "movies",
+        "topics": "postgres-source-movies",
+        "auto.create": true,
+        "auto.evolve": true,
+        "tasks.max": 2
+    }
+}
