@@ -7,9 +7,10 @@ class FeedbackService:
         self._repository: FeedbackRepository = feedback_repository
 
     async def create_feedback(
-        self, recommended_movie_id_list: list[int], selected_movie_id: int
+        self, user_id: int, recommended_movie_id_list: list[int], selected_movie_id: int
     ) -> FeedbackDomain:
         feedback = FeedbackDomain(
+            user_id=user_id,
             recommended_movie_id_list=recommended_movie_id_list,
             selected_movie_id=selected_movie_id,
         )
