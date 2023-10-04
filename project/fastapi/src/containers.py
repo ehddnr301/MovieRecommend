@@ -7,7 +7,13 @@ from src.repositories import (
     TagRepository,
     FeedbackRepository,
 )
-from src.services import MovieService, RatingService, TagService, FeedbackService
+from src.services import (
+    MovieService,
+    RatingService,
+    TagService,
+    FeedbackService,
+    RecommendService,
+)
 
 
 class Container(containers.DeclarativeContainer):
@@ -17,6 +23,7 @@ class Container(containers.DeclarativeContainer):
             ".api.rating.rating",
             ".api.tag.tag",
             ".api.feedback.feedback",
+            ".api.recommend.recommend",
         ]
     )
 
@@ -29,6 +36,11 @@ class Container(containers.DeclarativeContainer):
 
     movie_service = providers.Factory(
         MovieService,
+        movie_repository=movie_repository,
+    )
+
+    recommend_service = providers.Factory(
+        RecommendService,
         movie_repository=movie_repository,
     )
 

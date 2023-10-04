@@ -3,6 +3,7 @@ from typing import Callable
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.sql.expression import func
 
 from src.domain import MovieDomain
 
@@ -43,4 +44,16 @@ class MovieRepository:
                 )
                 .scalars()
                 .first()
+            )
+
+    async def get_random_recommendations(self):
+        async with self.session_factory() as session:
+            return (
+                (
+                    await session.execute(
+                        select(MovieDomain.movie_id).order_by(func.random()).limit(9)
+                    )
+                )
+                .scalars()
+                .all()
             )
