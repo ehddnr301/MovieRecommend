@@ -10,7 +10,7 @@ from src.services import RecommendService
 recommend_router = APIRouter()
 
 
-@recommend_router.get("/", status_code=status.HTTP_201_CREATED)
+@recommend_router.get("/v1", status_code=status.HTTP_200_OK)
 @inject
 async def get_movie_recommendations(
     user_id: int,
