@@ -10,3 +10,4 @@ class FeedbackDomain(TimestampMixin, Base):
     user_id = Column(Integer)
     recommended_movie_id_list = Column(ARRAY(Integer()))
     selected_movie_id = Column(Integer)
+    score = Column(Integer)
