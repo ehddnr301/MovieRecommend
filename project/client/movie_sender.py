@@ -57,9 +57,10 @@ class MovieSender:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     CSV_FILE = "./movies.csv"
+    MOVIE_SEND_INTERVAL = int(os.environ.get("MOVIE_SEND_INTERVAL", 60))
     movie_sender = MovieSender(CSV_FILE)
 
     while True:
         movie = movie_sender.pick_random_movie()
         movie_sender.send_movie_data(movie[0], movie[1], movie[2])
-        time.sleep(1)
+        time.sleep(MOVIE_SEND_INTERVAL)
