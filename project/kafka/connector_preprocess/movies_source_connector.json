@@ -1,0 +1,15 @@
+{
+    "name": "movies-source-connector",
+    "config": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+        "connection.url": "jdbc:postgresql://postgres-service:5432/postgres",
+        "connection.user": "postgres",
+        "connection.password": "postgres",
+        "table.whitelist": "movies",
+        "topic.prefix": "postgres-source-",
+        "topic.creation.default.partitions": 1,
+        "topic.creation.default.replication.factor": 1,
+        "mode": "timestamp",
+        "timestamp.column.name": "created_at"
+    }
+}

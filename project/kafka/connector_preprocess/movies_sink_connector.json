@@ -1,5 +1,5 @@
 {
-    "name": "postgres-sink-connector",
+    "name": "movies-sink-connector",
     "config": {
         "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
         "connection.url": "jdbc:postgresql://postgres-service-target:5432/postgres",
