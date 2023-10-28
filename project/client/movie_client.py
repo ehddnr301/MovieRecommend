@@ -84,7 +84,7 @@ class ClientSender:
             logging.error(f"Error: {response.status_code}")
 
     def send_requests_within_time_limit(self, client_wait_time, user_list, movie_id):
-        max_interval = client_wait_time // len(user_list)
+        max_interval = max(client_wait_time // (len(user_list) if len(user_list) != 0 else 1), 2)
         for user_id in user_list:
             time.sleep(random.randint(1, max_interval))
             recommended_movie_list = self._get_movie_recommend(user_id)
