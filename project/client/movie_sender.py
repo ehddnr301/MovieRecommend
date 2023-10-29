@@ -34,7 +34,7 @@ class MovieSender:
         return df.values.tolist()
 
     def send_movie_data(self, movie_id, title, genres):
-        data = {"genres": genres.split("|"), "movie_id": movie_id, "title": title}
+        data = {"genres": genres, "movie_id": movie_id, "title": title}
         try:
             response = requests.post(self.url, headers=self.headers, json=data)
             if response.status_code == 201:
