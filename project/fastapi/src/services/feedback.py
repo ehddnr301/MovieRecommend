@@ -21,6 +21,9 @@ class FeedbackService:
             ) - recommended_movie_id_list.index(selected_movie_id)
             score = (raw_score / max_length) * 10
 
+        recommended_movie_id_list = ",".join(
+            [str(movie_id) for movie_id in recommended_movie_id_list]
+        )
         feedback = FeedbackDomain(
             user_id=user_id,
             recommended_movie_id_list=recommended_movie_id_list,

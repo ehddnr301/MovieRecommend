@@ -8,4 +8,4 @@ class MovieDomain(TimestampMixin, Base):
 
     movie_id = Column(Integer, primary_key=True)
     title = Column(String)
-    genres = Column(ARRAY(String()))
+    genres = Column(String)
