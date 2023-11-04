@@ -6,6 +6,7 @@ from src.repositories import (
     RatingRepository,
     TagRepository,
     FeedbackRepository,
+    ModelRepository
 )
 from src.services import (
     MovieService,
@@ -34,6 +35,11 @@ class Container(containers.DeclarativeContainer):
         session_factory=db.provided.session,
     )
 
+    model_repository = providers.Factory(
+        ModelRepository,
+        session_factory=db.provided.session,
+    )
+
     movie_service = providers.Factory(
         MovieService,
         movie_repository=movie_repository,
@@ -42,6 +48,7 @@ class Container(containers.DeclarativeContainer):
     recommend_service = providers.Factory(
         RecommendService,
         movie_repository=movie_repository,
+        model_repository=model_repository,
     )
 
     rating_repository = providers.Factory(

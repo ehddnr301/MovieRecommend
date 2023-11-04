@@ -12,6 +12,7 @@ class FeedbackService:
         recommended_movie_id_list: list[int],
         selected_movie_id: int,
         score: int = 0,
+        user_type: str = "A",
     ) -> FeedbackDomain:
         max_length = len(recommended_movie_id_list)  # recommended_movie_id_list의 최대 길이
 
@@ -29,5 +30,6 @@ class FeedbackService:
             recommended_movie_id_list=recommended_movie_id_list,
             selected_movie_id=selected_movie_id,
             score=score,
+            user_type=user_type,
         )
         return await self._repository.create(feedback=feedback)

@@ -11,3 +11,4 @@ class FeedbackDomain(TimestampMixin, Base):
     recommended_movie_id_list = Column(String)
     selected_movie_id = Column(Integer)
     score = Column(Integer)
+    user_type = Column(String)
