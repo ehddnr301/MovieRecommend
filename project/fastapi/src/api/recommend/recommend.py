@@ -21,9 +21,8 @@ async def get_movie_recommendations(
 
 @recommend_router.get("/v2", status_code=status.HTTP_200_OK)
 @inject
-def get_movie_recommendations2(
+async def get_movie_recommendations2(
     user_id: int,
     recommend_service: RecommendService = Depends(Provide[Container.recommend_service]),
 ):
-    return [1,2,3,4,5,6,7,8,9]
-    # return recommend_service.get_model_recommendations(user_id)
+    return await recommend_service.get_model_recommendations(user_id)
