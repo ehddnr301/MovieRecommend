@@ -17,12 +17,12 @@ def trigger_airflow_dag(dag_id: str = "train_rec_model"):
     headers = {"accept": "application/json", "Content-Type": "application/json"}
     payload = {
         "conf": {},
-        "dag_run_id": "string",
-        "logical_date": "2023-11-05T09:43:01.758Z",
-        "note": "string",
     }
     url = f"http://airflow-webserver-service:8080/api/v1/dags/{dag_id}/dagRuns"
-    response = requests.post(url, headers=headers, data=json.dumps(payload))
+    response = requests.post(
+        url, headers=headers, data=json.dumps(payload), auth=("admin", "admin")
+    )
+    print(response.status_code, response.text)
 
 
 # fmt: off
@@ -178,11 +178,11 @@ class ClientSender:
         movies = self.movie_dataframe.values.tolist()
         random.shuffle(movies)
         movie = movies[self._current_index]
-        self.increase_current_index()
         if self._current_index % 500 == 0:
             trigger_airflow_dag("train_rec_model")
         if self._current_index >= len(self.movie_dataframe):
             self._current_index = 0
+        self.increase_current_index()
         return movie
 
 
