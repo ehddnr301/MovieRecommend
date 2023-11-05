@@ -3,12 +3,27 @@ import requests
 import random
 import time
 import logging
+import json
 import pandas as pd
 
 SOURCE_MOVIE_CSV_URL = (
     "https://media.githubusercontent.com/media/ehddnr301/MovieRecommend-Csv/master/"
 )
 SOURCE_MOVIE_CSV_URL = os.environ.get("SOURCE_MOVIE_CSV_URL", SOURCE_MOVIE_CSV_URL)
+
+
+# trigger Airflow Dag
+def trigger_airflow_dag(dag_id: str = "train_rec_model"):
+    headers = {"accept": "application/json", "Content-Type": "application/json"}
+    payload = {
+        "conf": {},
+        "dag_run_id": "string",
+        "logical_date": "2023-11-05T09:43:01.758Z",
+        "note": "string",
+    }
+    url = f"http://airflow-webserver-service:8080/api/v1/dags/{dag_id}/dagRuns"
+    response = requests.post(url, headers=headers, data=json.dumps(payload))
+
 
 # fmt: off
 GROUP_B = [1,   2,   3,   4,   5,   6,   7,  10,  15,  16,  17,  18,  19,
@@ -164,6 +179,8 @@ class ClientSender:
         random.shuffle(movies)
         movie = movies[self._current_index]
         self.increase_current_index()
+        if self._current_index % 500 == 0:
+            trigger_airflow_dag("train_rec_model")
         if self._current_index >= len(self.movie_dataframe):
             self._current_index = 0
         return movie
@@ -177,7 +194,8 @@ if __name__ == "__main__":
     client_sender = ClientSender()
     client_sender.download_csv_from_github()
     client_sender.download_csv_from_github("movies.csv")
-
+    trigger_airflow_dag("init_data")
+    time.sleep(10)
     while True:
         movie = client_sender.pick_random_movie()
         client_sender.send_movie_data(movie[0], movie[1], movie[2])
