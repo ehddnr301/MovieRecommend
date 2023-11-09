@@ -22,7 +22,7 @@ def trigger_airflow_dag(dag_id: str = "train_rec_model"):
     response = requests.post(
         url, headers=headers, data=json.dumps(payload), auth=("admin", "admin")
     )
-    print(response.status_code, response.text)
+    logging.info(response.status_code, response.text)
 
 
 # fmt: off
@@ -109,8 +109,7 @@ class ClientSender:
         response = requests.get(self.last_movie_url, headers=self.headers)
         return response.json()
 
-    def _get_movie_recommend(self, user_id):
-        action_cycle = (self._current_index // 1000) % 2
+    def _get_movie_recommend(self, user_id, action_cycle):
         url = (
             self.recommend_url_v2 + f"?user_id={user_id}"
             if user_id in GROUP_B and action_cycle != 0
@@ -123,13 +122,14 @@ class ClientSender:
         return response.json()
 
     def _create_feedback_request(
-        self, user_id, recommended_movie_list, movie_id, user_type
+        self, user_id, recommended_movie_list, movie_id, user_type, action_cycle
     ):
         data = {
             "user_id": user_id,
             "recommended_movie_id_list": recommended_movie_list,
             "selected_movie_id": movie_id,
             "user_type": user_type,
+            "action_cycle": action_cycle,
         }
         response = requests.post(self.feedback_url, headers=self.headers, json=data)
         if response.status_code != 201:
@@ -149,13 +149,14 @@ class ClientSender:
         max_interval = max(
             client_wait_time // (len(user_list) if len(user_list) != 0 else 1), 1
         )
+        action_cycle = (self._current_index // 2000) % 2
         for user_id in user_list:
-            time.sleep(random.randint(0, max_interval))
+            time.sleep(0.25)
             user_type = "A" if user_id not in GROUP_B else "B"
-            recommended_movie_list = self._get_movie_recommend(user_id)
+            recommended_movie_list = self._get_movie_recommend(user_id, action_cycle)
 
             self._create_feedback_request(
-                user_id, recommended_movie_list, movie_id, user_type
+                user_id, recommended_movie_list, movie_id, user_type, action_cycle
             )
 
             rating = self._find_rating_from_ratings(user_id, movie_id)
@@ -166,7 +167,9 @@ class ClientSender:
         try:
             response = requests.post(self.movie_url, headers=self.headers, json=data)
             if response.status_code == 201:
-                logging.info(f"Successfully sent data for movie: {title}")
+                logging.info(
+                    f"Successfully sent data for movie: {title} | self._current_index: {self._current_index}"
+                )
             else:
                 logging.error(
                     f"Failed to send data. Status code: {response.status_code}. Response text: {response.text}"
