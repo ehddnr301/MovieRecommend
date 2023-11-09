@@ -1,3 +1,4 @@
+import random
 from contextlib import AbstractAsyncContextManager
 from typing import Callable
 
@@ -48,12 +49,18 @@ class MovieRepository:
 
     async def get_random_recommendations(self):
         async with self.session_factory() as session:
-            return (
+            recent_movies = (
                 (
                     await session.execute(
-                        select(MovieDomain.movie_id).order_by(func.random()).limit(9)
+                        select(MovieDomain.movie_id)
+                        .order_by(MovieDomain.created_at.desc())
+                        .limit(9)
                     )
                 )
                 .scalars()
                 .all()
             )
+
+            random.shuffle(recent_movies)
+
+            return recent_movies

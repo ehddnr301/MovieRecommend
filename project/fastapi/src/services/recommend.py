@@ -13,4 +13,9 @@ class RecommendService:
         return await self._repository.get_random_recommendations()
 
     async def get_model_recommendations(self, user_id: int):
-        return await self._model_repository.create_prediction(user_id)
+        movie_id_list = await self._repository.get_random_recommendations()
+        recommend_movie_ids = await self._model_repository.create_prediction(
+            user_id, movie_id_list
+        )
+
+        return recommend_movie_ids
