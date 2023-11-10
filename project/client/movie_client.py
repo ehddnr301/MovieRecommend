@@ -145,7 +145,7 @@ class ClientSender:
         if response.status_code != 201:
             logging.error(f"Error: {response.status_code}")
 
-    def send_requests_within_time_limit(self, client_wait_time, user_list, movie_id):
+    def send_user_reaction(self, client_wait_time, user_list, movie_id):
         max_interval = max(
             client_wait_time // (len(user_list) if len(user_list) != 0 else 1), 1
         )
@@ -181,7 +181,7 @@ class ClientSender:
         movies = self.movie_dataframe.values.tolist()
         random.shuffle(movies)
         movie = movies[self._current_index]
-        if self._current_index % 500 == 0:
+        if self._current_index % 500 == 0 and self._current_index != 0:
             trigger_airflow_dag("train_rec_model")
         if self._current_index >= len(self.movie_dataframe):
             self._current_index = 0
@@ -197,12 +197,12 @@ if __name__ == "__main__":
     client_sender = ClientSender()
     client_sender.download_csv_from_github()
     client_sender.download_csv_from_github("movies.csv")
-    trigger_airflow_dag("init_data")
+    # trigger_airflow_dag("init_data")
     time.sleep(10)
     while True:
         movie = client_sender.pick_random_movie()
         client_sender.send_movie_data(movie[0], movie[1], movie[2])
         movie_id = movie[0]
         users = client_sender.find_user_list_from_ratings(movie_id)
-        client_sender.send_requests_within_time_limit(CLIENT_WAIT_TIME, users, movie_id)
+        client_sender.send_user_reaction(CLIENT_WAIT_TIME, users, movie_id)
         time.sleep(CLIENT_WAIT_TIME)
